@@ -401,6 +401,83 @@ public class CompositeDisposableTest {
     }
 
     @Test
+    public void addCompositeDisposable() {
+        CompositeDisposable cd1 = new CompositeDisposable();
+        CompositeDisposable cd2 = new CompositeDisposable();
+
+        Disposable d1 = Disposables.empty();
+        Disposable d2 = Disposables.empty();
+
+        cd1.add(d1);
+        cd2.add(d2);
+
+        assertFalse(d1.isDisposed());
+        assertFalse(d2.isDisposed());
+
+        cd1.addAll(cd2);
+
+        cd1.clear();
+
+        assertTrue(d1.isDisposed());
+        assertTrue(d2.isDisposed());
+
+        cd1 = new CompositeDisposable();
+        cd2 = new CompositeDisposable();
+
+        d1 = Disposables.empty();
+        d2 = Disposables.empty();
+
+        cd1.add(d1);
+        cd2.add(d2);
+
+        assertFalse(d1.isDisposed());
+        assertFalse(d2.isDisposed());
+
+        cd1.addAll(cd2);
+
+        cd1.dispose();
+
+        assertTrue(d1.isDisposed());
+        assertTrue(d2.isDisposed());
+
+        cd1 = new CompositeDisposable();
+        cd2 = new CompositeDisposable();
+
+        d1 = Disposables.empty();
+        d2 = Disposables.empty();
+
+        cd1.add(d1);
+        cd2.add(d2);
+
+        cd1.dispose();
+
+        assertFalse(d2.isDisposed());
+
+        assertFalse(cd1.addAll(cd2));
+
+        assertTrue(d1.isDisposed());
+        assertTrue(d2.isDisposed());
+
+        cd1 = new CompositeDisposable();
+        cd2 = new CompositeDisposable();
+
+        d1 = Disposables.empty();
+        d2 = Disposables.empty();
+
+        cd1.add(d1);
+        cd2.add(d2);
+
+        cd1.clear();
+
+        assertFalse(d2.isDisposed());
+
+        assertTrue(cd1.addAll(cd2));
+
+        assertTrue(d1.isDisposed());
+        assertFalse(d2.isDisposed());
+    }
+
+    @Test
     public void addAfterDisposed() {
         CompositeDisposable cd = new CompositeDisposable();
         cd.dispose();

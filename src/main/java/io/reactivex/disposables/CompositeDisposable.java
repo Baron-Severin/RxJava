@@ -135,6 +135,26 @@ public final class CompositeDisposable implements Disposable, DisposableContaine
         return false;
     }
 
+    public boolean addAll(@NonNull CompositeDisposable cd) {
+        ObjectHelper.requireNonNull(cd, "cd is null");
+        if (!disposed) {
+            synchronized (this) {
+                if (!disposed) {
+                    if (cd.resources == null) return true;
+
+                    Object[] d = cd.resources.keys();
+                    for (int i = 0; i < d.length; i++) {
+                        if (d[i] == null) continue;
+                        add((Disposable) d[i]);
+                    }
+                    return true;
+                }
+            }
+        }
+        cd.dispose();
+        return false;
+    }
+
     @Override
     public boolean remove(@NonNull Disposable d) {
         if (delete(d)) {
